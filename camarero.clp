@@ -8,6 +8,22 @@
 
 (defrule servirPlato
     ?pedido <- (platos ?x direccion ?y mesa ?z)
-    (test (= y 0)))
+    (test < x 4)
+    (test (= y 0))
+    =>
+    (retract ?pedido))
 
-(defrule recogerPlato)
+(defrule recogerPlato
+    ?pedido <- (platos ?x direccion ?y mesa ?z)
+    (test < x 4)
+    (test (= y 1))
+    =>
+    (retract ?pedido))
+
+(defrule demasiadosPlatos
+    ?pedido <- (platos ?x direccion ?y mesa ?z)
+    test(> x 4)
+    =>
+    (assert (platos 4 direccion ?y mesa ?z))
+    (assert (platos (- ?x 4) direccion ?y mesa ?z))
+    (retract ?pedido))
